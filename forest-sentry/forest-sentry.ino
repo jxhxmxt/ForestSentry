@@ -1,7 +1,8 @@
 #include <ESP8266WiFi.h>
-#include "Adafruit_MQTT.h"
-#include "Adafruit_MQTT_Client.h"
+#include <ESP8266HTTPClient.h>
+#include <WiFiClient.h>
 #include <DHT.h>
+#include <ArduinoJson.h> 
 
 //DHT11 Sensor
 #define DHTPIN D3     
@@ -17,40 +18,16 @@ DHT dht(DHTPIN, DHTTYPE);
 
 /************************* WiFi Access Point *********************************/
 
-#define WLAN_SSID       "iPhone Josue Montecinos"
-#define WLAN_PASS       "quetimporta"
+#define WLAN_SSID       "<wlan-ssid>"
+#define WLAN_PASS       "<wlan-pass>"
 
-/************************* Adafruit.io Setup *********************************/
-
-#define AIO_SERVER      "io.adafruit.com"
-#define AIO_SERVERPORT  1883                   // use 8883 for SSL
-#define AIO_USERNAME    "jcmbass"
-#define AIO_KEY         "aio_Jwmh33Md52Rryx4TpcJCGLZQaH8S"
-/************ Global State (you don't need to change this!) ******************/
-
-// Create an ESP8266 WiFiClient class to connect to the MQTT server.
-WiFiClient client;
-// or... use WiFiClientSecure for SSL
-//WiFiClientSecure client;
-
-// Setup the MQTT client class by passing in the WiFi client and MQTT server and login details.
-Adafruit_MQTT_Client mqtt(&client, AIO_SERVER, AIO_SERVERPORT, AIO_USERNAME, AIO_USERNAME, AIO_KEY);
-
-/****************************** Feeds for Publishing***************************************/
-Adafruit_MQTT_Publish temperatureFeed = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/feed_temperatura");
-Adafruit_MQTT_Publish humidityFeed = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/feed_humedad");
-Adafruit_MQTT_Publish gasFeed = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/feed_gas");
-Adafruit_MQTT_Publish rainFeed = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/feed_lluvia");
-Adafruit_MQTT_Publish gpsFeed = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/feed_gps");
-Adafruit_MQTT_Publish alertLevelFeed = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/feed_alert_level");
-
-/****************************** Feeds for Subscribing***************************************/
+/************************* Server *********************************/
+#define SERVER_URL      "http://tu-servidor.com/api/datos"  // URL del servidor donde se enviarán los datos
 
 /*************************** Sketch Code ************************************/
 
 void setup() {
-  dht.begin();
-  Serial.begin(9600);
+  Serial.begin(115200);
   //****************************************** Connect to WiFi access point.
   Serial.println(); Serial.println();
   Serial.print("Connecting to ");
@@ -64,6 +41,7 @@ void setup() {
   Serial.println();
   Serial.println("WiFi connected");
   Serial.println("IP address: "); Serial.println(WiFi.localIP());
+  dht.begin();
 }
 
 String nmeaSentence = "";
@@ -71,20 +49,14 @@ String latAndLon = ""; //Latitud y Longitud de UCA
 bool sentenceStart = false;
 
 void loop() {
-  MQTT_connect();
-  mqtt.processPackets(10000);
-  if(! mqtt.ping()) {   // ping the server to keep the mqtt connection alive
-    mqtt.disconnect();
-  }
-
   // Read from sensors
   float humidity = dht.readHumidity();
   float temperature = dht.readTemperature();
-  int gasLevel = analogRead(MQ2PIN);
+  int smokeLevel = analogRead(MQ2PIN);
   int rainStatus = digitalRead(RAINPIN);
 
   // Evaluar el nivel de alerta
-  int alertLevel = evaluateAlertLevel(temperature, humidity, gasLevel, rainStatus);
+  int alertLevel = evaluateAlertLevel(temperature, humidity, smokeLevel, rainStatus);
   
   // Leer datos del GPS
   while (Serial.available()) {
@@ -108,43 +80,44 @@ void loop() {
     }
   }
 
-  // Publish to Adafruit IO
-  temperatureFeed.publish(temperature);
-  humidityFeed.publish(humidity);
-  gasFeed.publish(gasLevel);
-  rainFeed.publish(interpretRainSensorDigital(rainStatus).c_str());
-  gpsFeed.publish(String("GPS Location: " + latAndLon).c_str());
-  alertLevelFeed.publish(alertLevel);
+  // Preparar el JSON con los datos
+  StaticJsonDocument<200> jsonDoc;
+  jsonDoc["humidity"] = humidity;
+  jsonDoc["temperature"] = temperature;
+  jsonDoc["smokeLevel"] = smokeLevel;
+  jsonDoc["rainStatus"] = rainStatus;
+  jsonDoc["gpsLocation"] = String(latAndLon).c_str();
+  jsonDoc["alertLevel"] = alertLevel;
+
+  String jsonData;
+  serializeJson(jsonDoc, jsonData);
 
 
   Serial.println("Temperatura: "+ String(temperature));
   Serial.println("Humedad: " + String(humidity));
-  Serial.println("Nivel de Gas: " + String(gasLevel));
+  Serial.println("Nivel de Gas: " + String(smokeLevel));
   Serial.println("Lluvia: " + interpretRainSensorDigital(rainStatus));
   Serial.println("NMEASentence: " + nmeaSentence);
   Serial.println("Lat and Lon: " + latAndLon);
 
 
-  delay(3000);
-}
-
-// Function to connect and reconnect as necessary to the MQTT server.
-void MQTT_connect() {
-  int8_t ret;
-  // Stop if already connected.
-  if (mqtt.connected()) {
-    return;}
-  Serial.print("Connecting to MQTT... ");
-  uint8_t retries = 3;
-  while ((ret = mqtt.connect()) != 0) { // connect will return 0 for connected
-       Serial.println(mqtt.connectErrorString(ret));
-       Serial.println("Retrying MQTT connection in 10 seconds...");
-       mqtt.disconnect();
-       delay(10000);  // wait 10 seconds
-       retries--;
-       if (retries == 0) {       // basically die and wait for WDT to reset me
-         while (1);}}
-  Serial.println("MQTT Connected!");
+  // Enviar los datos al servidor
+  if (WiFi.status() == WL_CONNECTED) {
+    WiFiClient client;
+    HTTPClient http;
+    http.begin(client, SERVER_URL);
+    http.addHeader("Content-Type", "application/json");
+    int httpResponseCode = http.POST(jsonData);
+    if (httpResponseCode > 0) {
+      String response = http.getString();
+      Serial.println(response);
+    } else {
+      Serial.print("Error en el envío: ");
+      Serial.println(httpResponseCode);
+    }
+    http.end();
+  }
+  delay(60000);  // Esperar un minuto antes de enviar el siguiente conjunto de datos
 }
 
 void processNMEASentence(String sentence) {
