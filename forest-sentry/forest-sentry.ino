@@ -45,7 +45,7 @@ void setup() {
 }
 
 String nmeaSentence = "";
-String latAndLon = ""; //Latitud y Longitud de UCA
+String latAndLon = "";
 bool sentenceStart = false;
 
 void loop() {
@@ -54,6 +54,8 @@ void loop() {
   float temperature = dht.readTemperature();
   int smokeLevel = analogRead(MQ2PIN);
   int rainStatus = digitalRead(RAINPIN);
+  double latitud = 0.0;
+  double longitud = 0.0;
 
   // Evaluar el nivel de alerta
   int alertLevel = evaluateAlertLevel(temperature, humidity, smokeLevel, rainStatus);
@@ -86,8 +88,9 @@ void loop() {
   jsonDoc["temperature"] = temperature;
   jsonDoc["smokeLevel"] = smokeLevel;
   jsonDoc["rainStatus"] = rainStatus;
-  jsonDoc["gpsLocation"] = String(latAndLon).c_str();
   jsonDoc["alertLevel"] = alertLevel;
+  jsonDoc["latitud"] = latitud;
+  jsonDoc["longitud"] = longitud;
 
   String jsonData;
   serializeJson(jsonDoc, jsonData);
@@ -162,6 +165,10 @@ void processNMEASentence(String sentence) {
 
     // Prepara los datos para la publicación
     latAndLon = String(lat, 6) + "," + String(lon, 6); // 6 dígitos de precisión
+
+    // Actualiza las variables globales
+    latitud = lat;
+    longitud = lon;
   }
 }
 
