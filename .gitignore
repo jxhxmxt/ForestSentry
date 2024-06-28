@@ -1,0 +1,40 @@
+HELP.md
+*.gradle
+backend/alpha/build/
+!backend/alpha/gradle/wrapper/gradle-wrapper.jar
+!backend/alpha/**/src/main/**/build/
+!backend/alpha/**/src/test/**/build/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!backend/alpha/**/src/main/**/bin/
+!backend/alpha/**/src/test/**/bin/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+backend/alpha/out/
+!backend/alpha/**/src/main/**/out/
+!backend/alpha/**/src/test/**/out/
+
+### NetBeans ###
+backend/alpha/nbproject/private/
+backend/alpha/nbbuild/
+backend/alpha/dist/
+backend/alpha/nbdist/
+backend/alpha/.nb-gradle/
+
+### VS Code ###
+backend/alpha/.vscode/
+
+### Misc ###
+*.properties
