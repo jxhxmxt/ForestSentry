@@ -1,5 +1,9 @@
 package com.forestsentry.alpha.models.dtos;
 
+import java.sql.Timestamp;
+
+import org.springframework.lang.Nullable;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,4 +36,7 @@ public class RecordDTO {
 
     @NotNull
     private String deviceID;
+
+    @Nullable
+    private Timestamp timestamp;
 }

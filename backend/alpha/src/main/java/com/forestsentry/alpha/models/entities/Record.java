@@ -2,6 +2,10 @@ package com.forestsentry.alpha.models.entities;
 
 import java.util.UUID;
 
+import com.forestsentry.alpha.models.dtos.RecordDTO;
+
+import java.sql.Timestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -45,6 +49,9 @@ public class Record {
     @Column(name = "device_id", nullable = false)
     private String deviceID;
 
+    @Column(name = "timestamp", insertable = false, updatable = false)
+    private Timestamp timestamp;
+
     public Record(Float lat, Float lon, Float hum, Float tem, Integer smo, Boolean rai, Integer al, String dev){
         this.latitude = lat;
         this.longitude = lon;
@@ -54,6 +61,17 @@ public class Record {
         this.rainStatus = rai;
         this.alertLevel = al;
         this.deviceID = dev;
+    }
+
+    public Record(RecordDTO dto){
+        this.latitude = dto.getLatitude();
+        this.longitude = dto.getLongitude();
+        this.humidity = dto.getHumidity();
+        this.temperature = dto.getTemperature();
+        this.smokeLevel = dto.getSmokeLevel();
+        this.rainStatus = dto.getRainStatus();
+        this.alertLevel = dto.getAlertLevel();
+        this.deviceID = dto.getDeviceID();
     }
 
 }
