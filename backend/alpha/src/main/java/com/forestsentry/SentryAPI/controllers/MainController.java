@@ -1,4 +1,4 @@
-package com.forestsentry.alpha.controllers;
+package com.forestsentry.SentryAPI.controllers;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;

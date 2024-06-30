@@ -1,12 +1,12 @@
-package com.forestsentry.alpha.services.dec;
+package com.forestsentry.SentryAPI.services.dec;
 
 import java.util.UUID;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
 
-import com.forestsentry.alpha.models.dtos.RecordDTO;
-import com.forestsentry.alpha.models.entities.Record;
+import com.forestsentry.SentryAPI.models.dtos.RecordDTO;
+import com.forestsentry.SentryAPI.models.entities.Record;
 
 public interface RecordService {
     public Boolean save(RecordDTO dto) throws Exception;

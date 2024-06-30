@@ -1,13 +1,13 @@
-package com.forestsentry.alpha;
+package com.forestsentry.SentryAPI;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class AlphaApplication {
+public class SentryAPIApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(AlphaApplication.class, args);
+		SpringApplication.run(SentryAPIApplication.class, args);
 	}
 
 }

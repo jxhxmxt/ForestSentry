@@ -1,4 +1,4 @@
-package com.forestsentry.alpha.models.dtos;
+package com.forestsentry.SentryAPI.models.dtos;
 
 import java.sql.Timestamp;
 

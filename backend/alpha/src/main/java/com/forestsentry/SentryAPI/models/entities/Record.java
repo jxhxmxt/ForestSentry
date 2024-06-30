@@ -1,8 +1,8 @@
-package com.forestsentry.alpha.models.entities;
+package com.forestsentry.SentryAPI.models.entities;
 
 import java.util.UUID;
 
-import com.forestsentry.alpha.models.dtos.RecordDTO;
+import com.forestsentry.SentryAPI.models.dtos.RecordDTO;
 
 import java.sql.Timestamp;
 

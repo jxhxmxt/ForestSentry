@@ -1,4 +1,4 @@
-package com.forestsentry.alpha.services.impl;
+package com.forestsentry.SentryAPI.services.impl;
 
 import java.util.UUID;
 import java.util.List;
@@ -10,10 +10,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.forestsentry.alpha.models.dtos.RecordDTO;
-import com.forestsentry.alpha.models.entities.Record;
-import com.forestsentry.alpha.repositories.RecordRepository;
-import com.forestsentry.alpha.services.dec.RecordService;
+import com.forestsentry.SentryAPI.models.dtos.RecordDTO;
+import com.forestsentry.SentryAPI.models.entities.Record;
+import com.forestsentry.SentryAPI.repositories.RecordRepository;
+import com.forestsentry.SentryAPI.services.dec.RecordService;
 
 @Service
 public class RecordServiceImpl implements RecordService{
