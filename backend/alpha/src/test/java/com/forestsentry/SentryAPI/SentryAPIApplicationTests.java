@@ -1,10 +1,10 @@
-package com.forestsentry.alpha;
+package com.forestsentry.SentryAPI;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class AlphaApplicationTests {
+class SentryAPIApplicationTests {
 
 	@Test
 	void contextLoads() {
