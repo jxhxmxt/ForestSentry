@@ -68,7 +68,7 @@ public class RecordServiceImpl implements RecordService{
     public Page<Record> findByDeviceId(String id, Integer page, Integer size) throws Exception{
         try{
             Pageable pageable = PageRequest.of(page, size);
-            return recordRepository.findAllByDeviceId(pageable);
+            return recordRepository.findAllByDeviceIdOrderByTimestampAsc(pageable);
         }
         catch(Exception e){
             throw e;

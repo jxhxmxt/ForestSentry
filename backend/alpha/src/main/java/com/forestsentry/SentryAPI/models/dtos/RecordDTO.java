@@ -4,6 +4,8 @@ import java.sql.Timestamp;
 
 import org.springframework.lang.Nullable;
 
+import com.forestsentry.SentryAPI.models.entities.Record;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -39,4 +41,15 @@ public class RecordDTO {
 
     @Nullable
     private Timestamp timestamp;
+
+    public RecordDTO(Record r){
+        this.latitude = r.getLatitude();
+        this.longitude = r.getLongitude();
+        this.humidity = r.getHumidity();
+        this.temperature = r.getTemperature();
+        this.smokeLevel = r.getSmokeLevel();
+        this.rainStatus = r.getRainStatus();
+        this.alertLevel = r.getAlertLevel();
+        this.deviceID = r.getDeviceID();
+    }
 }
