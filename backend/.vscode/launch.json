@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-SentryAPIApplication<alpha>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.forestsentry.SentryAPI.SentryAPIApplication",
+            "projectName": "alpha",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

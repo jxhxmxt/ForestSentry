@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.forestsentry.SentryAPI.models.entities.Record;
 
 public interface RecordRepository extends JpaRepository<Record, UUID> {
-    public Record findFirstRecordOrderByTimestampAsc();
-    public Record findFirstRecordByDeviceIdOrderByTimestampAsc(String deviceId);
-    public Page<Record> findAllByDeviceIdOrderByTimestampAsc(Pageable pageable);
+    public Record findFirstByOrderByTimestampDesc();
+    public Record findFirstByDeviceID(String deviceId);
+    public Page<Record> findAllByDeviceIDOrderByTimestampAsc(String deviceId, Pageable pageable);
 }

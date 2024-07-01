@@ -47,7 +47,7 @@ public class RecordServiceImpl implements RecordService{
     @Override
     public Record findLatest() throws Exception{
         try{
-            return recordRepository.findFirstRecordOrderByTimestampAsc();
+            return recordRepository.findFirstByOrderByTimestampDesc();
         }
         catch(Exception e){
             throw e;
@@ -68,7 +68,7 @@ public class RecordServiceImpl implements RecordService{
     public Page<Record> findByDeviceId(String id, Integer page, Integer size) throws Exception{
         try{
             Pageable pageable = PageRequest.of(page, size);
-            return recordRepository.findAllByDeviceIdOrderByTimestampAsc(pageable);
+            return recordRepository.findAllByDeviceIDOrderByTimestampAsc(id, pageable);
         }
         catch(Exception e){
             throw e;
@@ -80,7 +80,7 @@ public class RecordServiceImpl implements RecordService{
         try{
             List<Record> l = new ArrayList<Record>();
             ids.forEach(id -> {
-                l.add(recordRepository.findFirstRecordByDeviceIdOrderByTimestampAsc(id));
+                l.add(recordRepository.findFirstByDeviceID(id));
             });
             return l;
         }
