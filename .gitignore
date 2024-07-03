@@ -1,5 +1,7 @@
 HELP.md
 *.gradle
+!build.gradle
+!settings.gradle
 backend/alpha/build/
 !backend/alpha/gradle/wrapper/gradle-wrapper.jar
 !backend/alpha/**/src/main/**/build/
@@ -38,3 +40,4 @@ backend/alpha/.vscode/
 
 ### Misc ###
 *.properties
+!application.properties
