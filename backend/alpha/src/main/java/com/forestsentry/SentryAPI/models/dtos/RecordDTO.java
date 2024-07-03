@@ -42,6 +42,17 @@ public class RecordDTO {
     @Nullable
     private Timestamp timestamp;
 
+    public RecordDTO(Float lat, Float lon, Float hum, Float tem, Integer smo, Boolean rai, Integer al, String dev){
+        this.latitude = lat;
+        this.longitude = lon;
+        this.humidity = hum;
+        this.temperature = tem;
+        this.smokeLevel = smo;
+        this.rainStatus = rai;
+        this.alertLevel = al;
+        this.deviceID = dev;
+    }
+
     public RecordDTO(Record r){
         this.latitude = r.getLatitude();
         this.longitude = r.getLongitude();
@@ -51,5 +62,6 @@ public class RecordDTO {
         this.rainStatus = r.getRainStatus();
         this.alertLevel = r.getAlertLevel();
         this.deviceID = r.getDeviceID();
+        this.timestamp = r.getTimestamp();
     }
 }

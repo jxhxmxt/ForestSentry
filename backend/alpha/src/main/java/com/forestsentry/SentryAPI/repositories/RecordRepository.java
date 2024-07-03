@@ -11,5 +11,5 @@ import com.forestsentry.SentryAPI.models.entities.Record;
 public interface RecordRepository extends JpaRepository<Record, UUID> {
     public Record findFirstByOrderByTimestampDesc();
     public Record findFirstByDeviceID(String deviceId);
-    public Page<Record> findAllByDeviceIDOrderByTimestampAsc(String deviceId, Pageable pageable);
+    public Page<Record> findAllByDeviceIDOrderByTimestampDesc(String deviceId, Pageable pageable);
 }
