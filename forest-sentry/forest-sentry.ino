@@ -45,7 +45,7 @@ double longitud = 0.0;
 void setup() {
   Serial.begin(115200);
   gpsSerial.begin(GPSBaud);  // Comunicación con el módulo GPS
-  
+  dht.begin();
   Serial.println("GPS Test iniciado");
   //****************************************** Connect to WiFi access point.
   Serial.println(); Serial.println();
@@ -60,9 +60,9 @@ void setup() {
   Serial.println();
   Serial.println("WiFi connected");
   Serial.println("IP address: "); Serial.println(WiFi.localIP());
-  dht.begin();
 }
 
+String nmeaSentence = "";
 bool sentenceStart = false;
 
 void loop() {
@@ -76,8 +76,26 @@ void loop() {
   int alertLevel = evaluateAlertLevel(temperature, humidity, smokeLevel, rainStatus);
 
   // Leer datos del GPS
-  while (gpsSerial.available() > 0) {
+  while (gpsSerial.available()) {
     gps.encode(gpsSerial.read());
+    char c = gpsSerial.read();// Iniciar la captura de la oración al encontrar el signo '$'
+    if (c == '$') {
+      sentenceStart = true;
+      nmeaSentence = ""; // Reiniciar la oración
+    }
+
+    // Si la captura ha comenzado, acumula los caracteres
+    if (sentenceStart) {
+      nmeaSentence += c;
+    }
+
+    // Al encontrar el fin de línea, procesar la oración completa
+    if (c == '\n' && sentenceStart) {
+      sentenceStart = false;
+      Serial.print("Cadena NMEA: ");
+      Serial.println(nmeaSentence);
+    }
+
   }
   // Si se ha obtenido una nueva localización, mostrarla
   if (gps.location.isUpdated()) {
