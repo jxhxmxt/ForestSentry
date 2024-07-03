@@ -34,13 +34,13 @@ SoftwareSerial gpsSerial(GPS_RXPin, GPS_TXPin);
 #define WLAN_PASS       "quetimporta"
 
 /************************* Server *********************************/
-#define SERVER_URL      "http://tu-servidor.com/api/datos"  // URL del servidor donde se enviarán los datos
+#define SERVER_URL      "http://10.30.10.3:8080/API/"  // URL del servidor donde se enviarán los datos
 
 /*************************** Sketch Code ************************************/
 
 
-double latitud = 0.0;
-double longitud = 0.0;
+double latitude = 0.0;
+double longitude = 0.0;
 
 void setup() {
   Serial.begin(115200);
@@ -101,8 +101,10 @@ void loop() {
   if (gps.location.isUpdated()) {
     Serial.print("Latitud: ");
     Serial.println(gps.location.lat(), 6);
+    latitude = gps.location.lat();
     Serial.print("Longitud: ");
     Serial.println(gps.location.lng(), 6);
+    longitude = gps.location.lng();
   }
 
   // Preparar el JSON con los datos
@@ -110,10 +112,10 @@ void loop() {
   jsonDoc["humidity"] = humidity;
   jsonDoc["temperature"] = temperature;
   jsonDoc["smokeLevel"] = smokeLevel;
-  jsonDoc["rainStatus"] = rainStatus;
+  jsonDoc["rainStatus"] = (rainStatus == 0);
   jsonDoc["alertLevel"] = alertLevel;
-  jsonDoc["latitud"] = latitud;
-  jsonDoc["longitud"] = longitud;
+  jsonDoc["latitude"] = latitude;
+  jsonDoc["longitude"] = longitude;
 
   String jsonData;
   serializeJson(jsonDoc, jsonData);
