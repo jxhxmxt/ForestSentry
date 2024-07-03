@@ -100,7 +100,7 @@ public class MainController {
         }
     }
 
-    @GetMapping("/Latest/Group")
+    @PostMapping("/Latest/Group")
     public ResponseEntity<?> getLatestRecordsForGroup(@ModelAttribute @Valid RecordGroupRequestDTO dto, BindingResult result){
         try{
             if(result.hasErrors()){
