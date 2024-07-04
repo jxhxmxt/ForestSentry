@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,8 +35,8 @@ public class MainController {
     @Autowired
     private RecordService recordService;
 
-    @PostMapping("/")
-    public ResponseEntity<?> saveRecord(@ModelAttribute @Valid RecordDTO dto, BindingResult result){
+    @PostMapping(value = "/", consumes = "application/json")
+    public ResponseEntity<?> saveRecord(@RequestBody @Valid RecordDTO dto, BindingResult result){
         try{
             if(result.hasErrors()){
                 return new ResponseEntity<>(result.getAllErrors(), HttpStatus.BAD_REQUEST);
