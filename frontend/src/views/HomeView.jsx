@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import MapView from './MapView';
 
 // Mock data (replace with real data from the API)
@@ -29,7 +29,12 @@ const mockData = [
 const HomeView = () => {
     return (
         <>
-            <h1 className="fixed top-0 left-0 bg-white z-10 p-4 shadow-md">ForestSentry</h1>
+            {/* Top Bar */}
+            <div className="fixed top-0 left-0 right-0 bg-white z-10 p-4 shadow-md flex justify-between items-center">
+                <h1 className="text-xl font-bold">ForestSentry</h1>
+            </div>
+
+            {/* Map */}
             <div className="mt-16">
                 <MapView data={mockData} />
             </div>
