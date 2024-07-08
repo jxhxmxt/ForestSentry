@@ -5,6 +5,7 @@
 #include <ArduinoJson.h> 
 #include <SoftwareSerial.h>
 #include <TinyGPS++.h>
+#include <WiFiClientSecure.h>
 
 //DHT11 Sensor
 #define DHTPIN D3     
@@ -16,6 +17,9 @@ DHT dht(DHTPIN, DHTTYPE);
 
 // YL-38 Rain Sensor
 #define RAINPIN D2
+
+// Definir ID de dispositivo
+static const String device = "d2";
 
 // Definir pines para GPS
 static const int GPS_RXPin = D4;  // Pin para recibir datos del GPS
@@ -34,7 +38,7 @@ SoftwareSerial gpsSerial(GPS_RXPin, GPS_TXPin);
 #define WLAN_PASS       "TLrSr&4f4AHL"
 
 /************************* Server *********************************/
-#define SERVER_URL      "http://10.30.10.3:8080/API/"  // URL del servidor donde se enviarán los datos
+#define SERVER_URL      "https://eloquent-determination-production.up.railway.app/API/Data/Post"  // URL del servidor donde se enviarán los datos
 
 /*************************** Sketch Code ************************************/
 
@@ -137,6 +141,7 @@ void loop() {
   jsonDoc["alertLevel"] = alertLevel;
   jsonDoc["latitude"] = latitude;
   jsonDoc["longitude"] = longitude;
+  jsonDoc["deviceID"] = device;
 
   String jsonData;
   serializeJson(jsonDoc, jsonData);
@@ -146,17 +151,22 @@ void loop() {
   Serial.println("Humedad: " + String(humidity));
   Serial.println("Nivel de Gas: " + String(smokeLevel));
   Serial.println("Lluvia: " + interpretRainSensorDigital(rainStatus));
+  Serial.println("Latitud: " + String(latitude));
+  Serial.println("Longitud: " + String(longitude));
+
 
 
   // Enviar los datos al servidor
   if (WiFi.status() == WL_CONNECTED) {
-    WiFiClient client;
+    WiFiClientSecure client;
+    client.setInsecure();
     HTTPClient http;
     http.begin(client, SERVER_URL);
     http.addHeader("Content-Type", "application/json");
     int httpResponseCode = http.POST(jsonData);
     if (httpResponseCode > 0) {
       String response = http.getString();
+      Serial.print("Envío exitoso: ");
       Serial.println(response);
     } else {
       Serial.print("Error en el envío: ");
@@ -164,7 +174,7 @@ void loop() {
     }
     http.end();
   }
-  delay(60000);  // Esperar un minuto antes de enviar el siguiente conjunto de datos
+  delay(10000);  // Esperar un minuto antes de enviar el siguiente conjunto de datos
 }
 
 String interpretRainSensorDigital(int sensor) {
