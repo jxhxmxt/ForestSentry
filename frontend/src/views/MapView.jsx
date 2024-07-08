@@ -15,8 +15,11 @@ const icon = new L.Icon({
 
 // receives a list of data points as props (data)
 const MapView = ({ data }) => {
+    
+    console.log("el mock de verdad")
+    console.log(data)
     return (
-        <MapContainer center={[data[0].latitude, data[0].longitude]} zoom={10} style={{ height: '100vh', width: '100%' }}>
+        <MapContainer center={[data[0].latitude, data[0].longitude]} zoom={15} style={{ height: '100vh', width: '75%' }}>
             <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
