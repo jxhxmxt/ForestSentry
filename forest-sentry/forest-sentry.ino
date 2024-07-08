@@ -30,8 +30,8 @@ SoftwareSerial gpsSerial(GPS_RXPin, GPS_TXPin);
 
 /************************* WiFi Access Point *********************************/
 
-#define WLAN_SSID       "iPhone Josue Montecinos"
-#define WLAN_PASS       "quetimporta"
+#define WLAN_SSID       "ICARUS_2"
+#define WLAN_PASS       "TLrSr&4f4AHL"
 
 /************************* Server *********************************/
 #define SERVER_URL      "http://10.30.10.3:8080/API/"  // URL del servidor donde se enviarán los datos
@@ -107,6 +107,27 @@ void loop() {
     longitude = gps.location.lng();
   }
 
+  // Asegúrate de que todas las variables tienen valores válidos
+  // Si alguna variable podría ser null o no tener un valor válido, 
+  // establece un valor predeterminado aquí
+  if (isnan(humidity) || isnan(temperature)) {
+    humidity = 0.0;
+    temperature = 0.0;
+  }
+
+  if (isnan(smokeLevel)) {
+    smokeLevel = 0;
+  }
+
+  if (rainStatus != 0 && rainStatus != 1) {
+    rainStatus = 0;
+  }
+
+  if (isnan(latitude) || isnan(longitude)) {
+    latitude = 0.0;
+    longitude = 0.0;
+  }
+
   // Preparar el JSON con los datos
   StaticJsonDocument<200> jsonDoc;
   jsonDoc["humidity"] = humidity;
@@ -136,14 +157,14 @@ void loop() {
     int httpResponseCode = http.POST(jsonData);
     if (httpResponseCode > 0) {
       String response = http.getString();
-      // Serial.println(response);
+      Serial.println(response);
     } else {
       Serial.print("Error en el envío: ");
-      // Serial.println(httpResponseCode);
+      Serial.println(httpResponseCode);
     }
     http.end();
   }
-  delay(1000);  // Esperar un minuto antes de enviar el siguiente conjunto de datos
+  delay(60000);  // Esperar un minuto antes de enviar el siguiente conjunto de datos
 }
 
 String interpretRainSensorDigital(int sensor) {
