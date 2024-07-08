@@ -16,8 +16,8 @@ import jakarta.validation.constraints.NotNull;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Jacksonized
+@Builder
 public class RecordDTO {
     @NotNull
     private Float latitude;

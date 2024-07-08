@@ -35,7 +35,7 @@ public class MainController {
     @Autowired
     private RecordService recordService;
 
-    @PostMapping(value = "/", consumes = "application/json")
+    @PostMapping(path = "/Data/Post", consumes = "application/json")
     public ResponseEntity<?> saveRecord(@RequestBody @Valid RecordDTO dto, BindingResult result){
         try{
             if(result.hasErrors()){
@@ -69,7 +69,7 @@ public class MainController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/ID/{id}")
     public ResponseEntity<?> getRecordById(@PathVariable(name = "id") UUID id){
         try{
             Record r = recordService.findById(id);

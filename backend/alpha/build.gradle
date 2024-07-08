@@ -6,12 +6,7 @@ plugins {
 
 group = 'com.forestsentry'
 version = '0.0.1-SNAPSHOT'
-
-java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
-	}
-}
+sourceCompatibility = '17'
 
 configurations {
 	compileOnly {
@@ -21,6 +16,7 @@ configurations {
 
 repositories {
 	mavenCentral()
+	maven { url "https://jitpack.io" }
 }
 
 dependencies {
@@ -38,4 +34,10 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': gradle.ext.mainClassName
+    }
 }
