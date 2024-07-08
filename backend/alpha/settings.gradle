@@ -1,1 +1,2 @@
 rootProject.name = 'SentryAPI'
+gradle.ext.mainClassName = 'com.forestsentry.SentryAPI.SentryApplication'

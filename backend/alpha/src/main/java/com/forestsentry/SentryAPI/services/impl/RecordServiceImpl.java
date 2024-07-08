@@ -15,6 +15,8 @@ import com.forestsentry.SentryAPI.models.entities.Record;
 import com.forestsentry.SentryAPI.repositories.RecordRepository;
 import com.forestsentry.SentryAPI.services.dec.RecordService;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class RecordServiceImpl implements RecordService{
 
@@ -22,6 +24,7 @@ public class RecordServiceImpl implements RecordService{
     private RecordRepository recordRepository;
 
     @Override
+    @Transactional(rollbackOn = Exception.class)
     public Boolean save(RecordDTO dto) throws Exception{
         try{
             Record r = new Record(dto);
@@ -34,6 +37,7 @@ public class RecordServiceImpl implements RecordService{
     }
 
     @Override
+    @Transactional(rollbackOn = Exception.class)
     public Boolean delete(UUID id) throws Exception{
         try{
             recordRepository.deleteById(id);
